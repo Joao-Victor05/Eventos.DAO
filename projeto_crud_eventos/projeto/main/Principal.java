@@ -17,8 +17,8 @@ public class Principal {
 
     public static void main(String[] args) {
         try {
-            Conexao.createTable(); // Criação da tabela eventos
-            Conexao.createTableParticipantes(); // Criação da tabela participantes
+            Conexao.createTable();
+            Conexao.createTableParticipantes();
     
             System.out.println("Bem-vindo ao sistema de eventos!\n");
     
@@ -32,7 +32,7 @@ public class Principal {
                 System.out.println("0 - Sair");
                 System.out.print("Opção: ");
                 opcao = scanner.nextInt();
-                scanner.nextLine(); // limpar buffer
+                scanner.nextLine();
     
                 switch (opcao) {
                     case 1 -> cadastrarEvento();
@@ -87,7 +87,7 @@ public class Principal {
         System.out.print("Telefone: ");
         String telefone = scanner.nextLine();
 
-        Participante participante = new Participante(0, nome, email, telefone); // ID será gerado pelo banco, se for auto_increment
+        Participante participante = new Participante(0, nome, email, telefone);
         participanteDAO.inserir(participante);
 
         System.out.println("Participante cadastrado com sucesso!");
