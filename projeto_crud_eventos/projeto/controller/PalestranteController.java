@@ -13,12 +13,11 @@ package projeto.controller;
         palestrantes = new ArrayList<>();
     }
 
-    // Adicionar palestrante
+ 
     public Palestrante adicionarPalestrante() {
         try {
             System.out.println("\n--- Adicionar novo palestrante ---");
 
-            // Remover a solicitação do ID, pois pode ser gerado automaticamente
             System.out.print("Nome: ");
             String nome = scanner.nextLine();
 
@@ -28,14 +27,14 @@ package projeto.controller;
             System.out.print("Área de Atuação: ");
             String areaAtuacao = scanner.nextLine();
 
-            // Validar campos antes de criar o objeto
+        
             if (nome.isEmpty() || curriculo.isEmpty() || areaAtuacao.isEmpty()) {
                 System.out.println("Todos os campos são obrigatórios.");
                 return null;
             }
 
-            // ID pode ser gerado automaticamente (por exemplo, usando um banco de dados com auto incremento)
-            Palestrante novo = new Palestrante(0, nome, curriculo, areaAtuacao); // ID gerado automaticamente
+          
+            Palestrante novo = new Palestrante(0, nome, curriculo, areaAtuacao);
             palestrantes.add(novo);
 
             System.out.println("Palestrante adicionado com sucesso!");
@@ -47,7 +46,7 @@ package projeto.controller;
         }
     }
 
-    // Atualizar palestrante por ID
+    
     public boolean atualizarPalestrante(int id, Palestrante novoPalestrante) {
         for (int i = 0; i < palestrantes.size(); i++) {
             if (palestrantes.get(i).getId() == id) {
@@ -61,7 +60,7 @@ package projeto.controller;
         return false;
     }
 
-    // Remover palestrante por ID
+   
     public boolean removerPalestrante(int id) {
         for (int i = 0; i < palestrantes.size(); i++) {
             if (palestrantes.get(i).getId() == id) {
@@ -74,7 +73,7 @@ package projeto.controller;
         return false;
     }
 
-    // Listar todos os palestrantes
+   
     public List<Palestrante> listarPalestrantes() {
         if (palestrantes.isEmpty()) {
             System.out.println("Nenhum palestrante cadastrado.");
@@ -87,7 +86,7 @@ package projeto.controller;
         return palestrantes;
     }
 
-    // Buscar por ID
+   
     public Palestrante buscarPalestrantePorId(int id) {
         for (Palestrante p : palestrantes) {
             if (p.getId() == id) {
