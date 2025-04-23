@@ -15,12 +15,12 @@ package projeto.controller;
         eventos = new ArrayList<>();
     }
 
-    // Inserção
+   
     public Evento adicionarEvento() {
         try {
             System.out.println("\nInserir novo evento:");
 
-            // Remover a solicitação do ID, caso seja gerado automaticamente
+            
             System.out.print("Nome: ");
             String nomeInserir = scanner.nextLine();
 
@@ -29,7 +29,7 @@ package projeto.controller;
 
             System.out.print("Data (yyyy-MM-dd): ");
             String dataStr = scanner.nextLine();
-            LocalDate dataInserir = LocalDate.parse(dataStr);  // Lançará DateTimeParseException se o formato estiver errado
+            LocalDate dataInserir = LocalDate.parse(dataStr);
 
             if (dataInserir.isBefore(LocalDate.now())) {
                 System.out.println("Data inválida! O evento não pode ser no passado.");
@@ -39,7 +39,7 @@ package projeto.controller;
             System.out.print("Local: ");
             String localInserir = scanner.nextLine();
 
-            // O ID pode ser gerado automaticamente
+            
             Evento novoEvento = new Evento(0, nomeInserir, dataInserir, localInserir, descricaoInserir);
             eventos.add(novoEvento);
 
@@ -54,11 +54,11 @@ package projeto.controller;
         return null;
     }
 
-    // Atualização por ID
+   
     public boolean atualizarEvento(int id, Evento novoEvento) {
         for (int i = 0; i < eventos.size(); i++) {
             if (eventos.get(i).getId() == id) {
-                novoEvento.setId(id); // Garantir que o ID não mude
+                novoEvento.setId(id);
                 eventos.set(i, novoEvento);
                 System.out.println("Evento atualizado com sucesso!");
                 return true;
@@ -68,7 +68,7 @@ package projeto.controller;
         return false;
     }
 
-    // Remoção por ID
+    
     public boolean removerEvento(int id) {
         for (int i = 0; i < eventos.size(); i++) {
             if (eventos.get(i).getId() == id) {
@@ -81,7 +81,7 @@ package projeto.controller;
         return false;
     }
 
-    // Listagem de eventos
+    
     public void listarEventos() {
         if (eventos.isEmpty()) {
             System.out.println("Nenhum evento cadastrado.");
@@ -93,7 +93,7 @@ package projeto.controller;
         }
     }
 
-    // Buscar evento por ID
+    
     public Evento buscarEventoPorId(int id) {
         for (Evento evento : eventos) {
             if (evento.getId() == id) {
