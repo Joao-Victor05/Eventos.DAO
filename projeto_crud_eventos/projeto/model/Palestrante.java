@@ -1,5 +1,5 @@
 package projeto.model;
-// Palestrante.java - Classe modelo para palestrantes
+
 public class Palestrante {
  private int id;
  private String nome;
