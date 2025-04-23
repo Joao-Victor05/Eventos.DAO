@@ -1,5 +1,5 @@
 package projeto.model;
-// Participante.java - Classe modelo para participantes
+
 public class Participante {
  private int id;
  private String nome;
