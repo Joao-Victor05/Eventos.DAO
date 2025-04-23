@@ -1,0 +1,6 @@
+{
+    // ... outras configurações ...
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar"
+    ]
+}
