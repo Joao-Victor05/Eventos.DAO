@@ -73,6 +73,34 @@ public static void createTable() throws SQLException {
                      "FOREIGN KEY (evento_id) REFERENCES eventos(id))";
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
+             stmt.executeUpdate();
+        }
+    }
+    public static void createTablePalestrantes() throws SQLException {
+        String sql = "CREATE TABLE IF NOT EXISTS palestrantes (" +
+                     "id INT PRIMARY KEY AUTO_INCREMENT, " +
+                     "nome VARCHAR(100) NOT NULL, " +
+                     "curriculo TEXT, " +
+                     "area_atuacao VARCHAR(100))";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            System.out.println("Criando tabela palestrantes...");
+            stmt.executeUpdate();
+            System.out.println("Tabela palestrantes criada com sucesso.");
+        } catch (SQLException e) {
+            System.err.println("Erro ao criar tabela palestrantes: " + e.getMessage());
+            throw e;
+        }
+    }
+    public static void createTablePalestrantesEventos() throws SQLException {
+        String sql = "CREATE TABLE IF NOT EXISTS palestrantes_eventos (" +
+                     "palestrante_id INT, " +
+                     "evento_id INT, " +
+                     "PRIMARY KEY (palestrante_id, evento_id), " +
+                     "FOREIGN KEY (palestrante_id) REFERENCES palestrantes(id), " +
+                     "FOREIGN KEY (evento_id) REFERENCES eventos(id))";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.executeUpdate();
         }
     }

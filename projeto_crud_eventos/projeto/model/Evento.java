@@ -9,6 +9,7 @@ package projeto.model;
            private String local;
            private String descricao;
            private String nomeParticipante;
+           private String nomePalestrante;
 
            public String getNomeParticipante() {
                return nomeParticipante;
@@ -27,6 +28,7 @@ package projeto.model;
             this.data = data;
             this.local = local;
             this.descricao = descricao;
+        
         }
 
 
@@ -37,6 +39,7 @@ package projeto.model;
                this.descricao = descricao;
            }
 
+          
            public int getId() { return id; }
            public void setId(int id) { this.id = id; }
            public String getNome() { return nome; }
@@ -47,6 +50,8 @@ package projeto.model;
            public void setLocal(String local) { this.local = local; }
            public String getDescricao(){ return descricao;}
            public void setDescricao(String descricao){ this.descricao = descricao;}
+           public String getPalestrante(){ return nomePalestrante;}
+           public String setPalestrante(String nomePalestrante) { return this.nomePalestrante = nomePalestrante; }
 
            @Override
            public String toString() {
