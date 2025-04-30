@@ -8,7 +8,16 @@ package projeto.model;
            private LocalDate data;
            private String local;
            private String descricao;
+           private String nomeParticipante;
 
+           public String getNomeParticipante() {
+               return nomeParticipante;
+           }
+           
+           public void setNomeParticipante(String nomeParticipante) {
+               this.nomeParticipante = nomeParticipante;
+           }
+           
            public Evento() {}
            
 
@@ -41,6 +50,10 @@ package projeto.model;
 
            @Override
            public String toString() {
-               return "Evento{id=" + id + ", nome='" + nome + "', data=" + data + ", local='" + local + "'}";
-           }
-       }
+            return "Evento{id=" + id + 
+                   ", nome='" + nome + 
+                   "', data=" + data + 
+                   ", local='" + local + 
+                   "', participante='" + nomeParticipante + "'}";
+        }
+    } 

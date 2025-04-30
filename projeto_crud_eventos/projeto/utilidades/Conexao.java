@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager; 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Conexao {
 
@@ -19,6 +20,24 @@ public class Conexao {
             throw new SQLException("Driver MySQL não encontrado", e);
         }
     }
+    public static void createDatabase() {
+    String url = "jdbc:mysql://localhost:3306/";
+    try {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        try (Connection conn = DriverManager.getConnection(url, USER, PASSWORD);
+             Statement stmt = conn.createStatement()) {
+            
+            // Cria o banco de dados se não existir
+            stmt.executeUpdate("CREATE DATABASE IF NOT EXISTS eventos");
+            System.out.println("Banco de dados 'eventos' criado ou já existe.");
+            
+        } catch (SQLException e) {
+            System.out.println("Erro ao criar banco de dados: " + e.getMessage());
+        }
+    } catch (ClassNotFoundException e) {
+        System.out.println("Driver MySQL não encontrado: " + e.getMessage());
+    }
+}
 
 public static void createTable() throws SQLException {
     String sql = "CREATE TABLE IF NOT EXISTS eventos (" +
@@ -43,6 +62,18 @@ public static void createTable() throws SQLException {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.executeUpdate();
             System.out.println("Tabela 'participantes' criada ou já existe.");
+        }
+    }
+    public static void createTableParticipantesEventos() throws SQLException {
+        String sql = "CREATE TABLE IF NOT EXISTS participantes_eventos (" +
+                     "participante_id INT, " +
+                     "evento_id INT, " +
+                     "PRIMARY KEY (participante_id, evento_id), " +
+                     "FOREIGN KEY (participante_id) REFERENCES participantes(id), " +
+                     "FOREIGN KEY (evento_id) REFERENCES eventos(id))";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.executeUpdate();
         }
     }
 }

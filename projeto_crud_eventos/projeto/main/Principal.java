@@ -19,6 +19,7 @@ public class Principal {
         try {
             Conexao.createTable();
             Conexao.createTableParticipantes();
+            Conexao.createTableParticipantesEventos(); // Adicionado
     
             System.out.println("Bem-vindo ao sistema de eventos!\n");
     
@@ -29,6 +30,7 @@ public class Principal {
                 System.out.println("2 - Listar eventos");
                 System.out.println("3 - Cadastrar participante");
                 System.out.println("4 - Listar participantes");
+                System.out.println("5 - Associar participante a evento"); // Nova opção
                 System.out.println("0 - Sair");
                 System.out.print("Opção: ");
                 opcao = scanner.nextInt();
@@ -39,6 +41,7 @@ public class Principal {
                     case 2 -> listarEventos();
                     case 3 -> cadastrarParticipante();
                     case 4 -> listarParticipantes();
+                    case 5 -> associarParticipanteEvento(); // Novo método
                     case 0 -> System.out.println("Encerrando...");
                     default -> System.out.println("Opção inválida.");
                 }
@@ -94,13 +97,85 @@ public class Principal {
     }
 
     private static void listarParticipantes() throws SQLException {
-        List<Participante> participantes = participanteDAO.listarTodos();
+        List<Participante> participantes = participanteDAO.listar();
         if (participantes.isEmpty()) {
             System.out.println("Nenhum participante cadastrado.");
         } else {
             System.out.println("\n--- Participantes cadastrados ---");
             for (Participante p : participantes) {
                 System.out.println(p);
+                // Opcional: listar eventos do participante
+                List<Evento> eventos = participanteDAO.listarEventosDoParticipante(p.getId());
+                if (!eventos.isEmpty()) {
+                    System.out.println("  Eventos associados:");
+                    for (Evento e : eventos) {
+                        System.out.println("    - " + e.getNome());
+                    }
+                }
+            }
+        }
+    }
+
+    private static void associarParticipanteEvento() throws SQLException {
+        System.out.println("\n--- Associar Participante a Evento ---");
+
+        // Listar participantes
+        List<Participante> participantes = participanteDAO.listar();
+        if (participantes.isEmpty()) {
+            System.out.println("Nenhum participante cadastrado.");
+            return;
+        }
+        System.out.println("Participantes disponíveis:");
+        for (Participante p : participantes) {
+            System.out.println(p);
+        }
+        System.out.print("Digite o ID do participante: ");
+        int participanteId = scanner.nextInt();
+        scanner.nextLine();
+
+        // Verificar se o participante existe
+        Participante participante = participantes.stream()
+                .filter(p -> p.getId() == participanteId)
+                .findFirst()
+                .orElse(null);
+        if (participante == null) {
+            System.out.println("Participante não encontrado.");
+            return;
+        }
+
+        // Listar eventos
+        List<Evento> eventos = eventoDAO.listarTodos();
+        if (eventos.isEmpty()) {
+            System.out.println("Nenhum evento cadastrado.");
+            return;
+        }
+        System.out.println("Eventos disponíveis:");
+        for (Evento e : eventos) {
+            System.out.println(e);
+        }
+        System.out.print("Digite o ID do evento: ");
+        int eventoId = scanner.nextInt();
+        scanner.nextLine();
+
+        // Verificar se o evento existe
+        Evento evento = eventos.stream()
+                .filter(e -> e.getId() == eventoId)
+                .findFirst()
+                .orElse(null);
+        if (evento == null) {
+            System.out.println("Evento não encontrado.");
+            return;
+        }
+
+        // Associar participante ao evento
+        try {
+            participanteDAO.associarEvento(participanteId, eventoId);
+            System.out.println("Participante associado ao evento com sucesso!");
+        } catch (SQLException e) {
+            if (e.getMessage().contains("Duplicate entry")) {
+                System.out.println("Este participante já está associado a este evento.");
+            } else {
+                System.out.println("Erro ao associar participante ao evento: " + e.getMessage());
             }
         }
     }
