@@ -135,19 +135,19 @@ public class Principal {
             System.out.println("Nenhum participante cadastrado.");
             return;
         }
-        System.out.println("Participantes disponíveis:");
-        for (Participante p : participantes) {
+            System.out.println("Participantes disponíveis:");
+            for (Participante p : participantes) {
             System.out.println(p);
         }
-        System.out.print("Digite o ID do participante: ");
-        int participanteId = scanner.nextInt();
-        scanner.nextLine();
+            System.out.print("Digite o ID do participante: ");
+            int participanteId = scanner.nextInt();
+            scanner.nextLine();
 
-        Participante participante = participantes.stream()
+            Participante participante = participantes.stream()
                 .filter(p -> p.getId() == participanteId)
                 .findFirst()
                 .orElse(null);
-        if (participante == null) {
+            if (participante == null) {
             System.out.println("Participante não encontrado.");
             return;
         }
