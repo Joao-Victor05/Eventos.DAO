@@ -1,59 +1,57 @@
 package projeto.controller;
 
-import projeto.model.Participante;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import projeto.model.Participante;
 
 public class ParticipanteController {
-    private List<Participante> participantes;
+    private final List<Participante> participantes;
     private static final Scanner scanner = new Scanner(System.in);
 
     public ParticipanteController() {
-        participantes = new ArrayList<>();
+        this.participantes = new ArrayList<>();
     }
 
-  
     public Participante adicionarParticipante() {
         try {
             System.out.println("\n--- Adicionar novo participante ---");
-
-          
             System.out.print("Nome: ");
-            String nome = scanner.nextLine();
-
+            String nome = scanner.nextLine().trim();
             System.out.print("Email: ");
-            String email = scanner.nextLine();
+            String email = scanner.nextLine().trim();
             while (!validarEmail(email)) {
                 System.out.print("Email inválido. Digite novamente: ");
-                email = scanner.nextLine();
+                email = scanner.nextLine().trim();
             }
-
             System.out.print("Telefone: ");
-            String telefone = scanner.nextLine();
+            String telefone = scanner.nextLine().trim();
             while (!validarTelefone(telefone)) {
                 System.out.print("Telefone inválido. Digite novamente: ");
-                telefone = scanner.nextLine();
+                telefone = scanner.nextLine().trim();
             }
-
-        
-            Participante novo = new Participante(0, nome, email, telefone); 
+            if (nome.isEmpty() || email.isEmpty() || telefone.isEmpty()) {
+                System.out.println("Todos os campos são obrigatórios.");
+                return null;
+            }
+            Participante novo = new Participante(0, nome, email, telefone);
             participantes.add(novo);
-
             System.out.println("Participante adicionado com sucesso!");
             return novo;
-
         } catch (Exception e) {
             System.out.println("Erro ao adicionar participante: " + e.getMessage());
             return null;
         }
     }
 
-    
     public boolean atualizarParticipante(int id, Participante novoParticipante) {
+        if (novoParticipante == null) {
+            System.out.println("Dados do participante inválidos.");
+            return false;
+        }
         for (int i = 0; i < participantes.size(); i++) {
             if (participantes.get(i).getId() == id) {
-                novoParticipante.setId(id); // Manter o mesmo ID
+                novoParticipante.setId(id);
                 participantes.set(i, novoParticipante);
                 System.out.println("Participante atualizado com sucesso!");
                 return true;
@@ -63,7 +61,6 @@ public class ParticipanteController {
         return false;
     }
 
-  
     public boolean removerParticipante(int id) {
         for (int i = 0; i < participantes.size(); i++) {
             if (participantes.get(i).getId() == id) {
@@ -76,7 +73,6 @@ public class ParticipanteController {
         return false;
     }
 
-   
     public List<Participante> listarParticipantes() {
         if (participantes.isEmpty()) {
             System.out.println("Nenhum participante cadastrado.");
@@ -89,7 +85,6 @@ public class ParticipanteController {
         return participantes;
     }
 
-   
     public Participante buscarParticipantePorId(int id) {
         for (Participante p : participantes) {
             if (p.getId() == id) {
@@ -99,13 +94,11 @@ public class ParticipanteController {
         return null;
     }
 
-    
     private boolean validarEmail(String email) {
         return email != null && email.contains("@") && email.contains(".");
     }
 
-    
     private boolean validarTelefone(String telefone) {
-        return telefone != null && telefone.matches("\\(\\d{2}\\) \\d{5}-\\d{4}"); 
+        return telefone != null && telefone.matches("\\(\\d{2}\\) \\d{5}-\\d{4}");
     }
 }

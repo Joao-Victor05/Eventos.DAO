@@ -9,6 +9,7 @@ import projeto.model.Evento;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public class PainelAssociacoes extends JPanel {
     private final ParticipanteDAO participanteDAO = new ParticipanteDAO();
@@ -43,15 +44,13 @@ public class PainelAssociacoes extends JPanel {
         linha2.add(new JLabel("Email:")); linha2.add(emailField);
         linha2.add(new JLabel("Telefone:")); linha2.add(telefoneField);
 
-        participanteBox.addActionListener(e -> {
+        participanteBox.addActionListener(_ -> {
             Participante p = (Participante) participanteBox.getSelectedItem();
             if (p != null) {
                 idField.setText(String.valueOf(p.getId()));
                 nomeField.setText(p.getNome());
                 emailField.setText(p.getEmail());
                 telefoneField.setText(p.getTelefone());
-            } else {
-                idField.setText(""); nomeField.setText(""); emailField.setText(""); telefoneField.setText("");
             }
         });
         if (participanteBox.getItemCount() > 0) {
@@ -77,7 +76,7 @@ public class PainelAssociacoes extends JPanel {
         linha4.add(new JLabel("Local:")); linha4.add(localEventoField);
         linha4.add(new JLabel("Descrição:")); linha4.add(descricaoEventoField);
 
-        eventoBox.addActionListener(e -> {
+        eventoBox.addActionListener(_ -> {
             Evento ev = (Evento) eventoBox.getSelectedItem();
             if (ev != null) {
                 idEventoField.setText(String.valueOf(ev.getId()));
@@ -85,8 +84,6 @@ public class PainelAssociacoes extends JPanel {
                 dataEventoField.setText(ev.getData() != null ? ev.getData().toString() : "");
                 localEventoField.setText(ev.getLocal());
                 descricaoEventoField.setText(ev.getDescricao());
-            } else {
-                idEventoField.setText(""); nomeEventoField.setText(""); dataEventoField.setText(""); localEventoField.setText(""); descricaoEventoField.setText("");
             }
         });
         if (eventoBox.getItemCount() > 0) {
@@ -97,18 +94,18 @@ public class PainelAssociacoes extends JPanel {
         JButton btnAssociar = new JButton("Associar Participante ao Evento");
         linha5.add(btnAssociar);
 
-        btnAssociar.addActionListener(e -> {
+        btnAssociar.addActionListener(_ -> {
+            Participante p = (Participante) participanteBox.getSelectedItem();
+            Evento ev = (Evento) eventoBox.getSelectedItem();
+            if (p == null || ev == null) {
+                JOptionPane.showMessageDialog(this, "Selecione um participante e um evento.");
+                return;
+            }
             try {
-                Participante p = (Participante) participanteBox.getSelectedItem();
-                Evento ev = (Evento) eventoBox.getSelectedItem();
-                if (p == null || ev == null) {
-                    JOptionPane.showMessageDialog(this, "Selecione participante e evento.");
-                    return;
-                }
                 participanteDAO.associarEvento(p.getId(), ev.getId());
-                JOptionPane.showMessageDialog(this, "Participante associado ao evento!");
+                JOptionPane.showMessageDialog(this, "Participante associado ao evento com sucesso!");
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Erro: " + ex.getMessage());
+                JOptionPane.showMessageDialog(this, "Erro ao associar: " + ex.getMessage());
             }
         });
 
@@ -142,15 +139,13 @@ public class PainelAssociacoes extends JPanel {
         linha2.add(new JLabel("Currículo:")); linha2.add(curriculoField);
         linha2.add(new JLabel("Área de Atuação:")); linha2.add(areaAtuacaoField);
 
-        palestranteBox.addActionListener(e -> {
+        palestranteBox.addActionListener(_ -> {
             Palestrante p = (Palestrante) palestranteBox.getSelectedItem();
             if (p != null) {
                 idField.setText(String.valueOf(p.getId()));
                 nomeField.setText(p.getNome());
                 curriculoField.setText(p.getCurriculo());
                 areaAtuacaoField.setText(p.getAreaAtuacao());
-            } else {
-                idField.setText(""); nomeField.setText(""); curriculoField.setText(""); areaAtuacaoField.setText("");
             }
         });
         if (palestranteBox.getItemCount() > 0) {
@@ -176,7 +171,7 @@ public class PainelAssociacoes extends JPanel {
         linha4.add(new JLabel("Local:")); linha4.add(localEventoField);
         linha4.add(new JLabel("Descrição:")); linha4.add(descricaoEventoField);
 
-        eventoBox.addActionListener(e -> {
+        eventoBox.addActionListener(_ -> {
             Evento ev = (Evento) eventoBox.getSelectedItem();
             if (ev != null) {
                 idEventoField.setText(String.valueOf(ev.getId()));
@@ -184,8 +179,6 @@ public class PainelAssociacoes extends JPanel {
                 dataEventoField.setText(ev.getData() != null ? ev.getData().toString() : "");
                 localEventoField.setText(ev.getLocal());
                 descricaoEventoField.setText(ev.getDescricao());
-            } else {
-                idEventoField.setText(""); nomeEventoField.setText(""); dataEventoField.setText(""); localEventoField.setText(""); descricaoEventoField.setText("");
             }
         });
         if (eventoBox.getItemCount() > 0) {
@@ -196,18 +189,18 @@ public class PainelAssociacoes extends JPanel {
         JButton btnAssociar = new JButton("Associar Palestrante ao Evento");
         linha5.add(btnAssociar);
 
-        btnAssociar.addActionListener(e -> {
+        btnAssociar.addActionListener(_ -> {
+            Palestrante p = (Palestrante) palestranteBox.getSelectedItem();
+            Evento ev = (Evento) eventoBox.getSelectedItem();
+            if (p == null || ev == null) {
+                JOptionPane.showMessageDialog(this, "Selecione um palestrante e um evento.");
+                return;
+            }
             try {
-                Palestrante p = (Palestrante) palestranteBox.getSelectedItem();
-                Evento ev = (Evento) eventoBox.getSelectedItem();
-                if (p == null || ev == null) {
-                    JOptionPane.showMessageDialog(this, "Selecione palestrante e evento.");
-                    return;
-                }
                 palestranteDAO.associarEvento(p.getId(), ev.getId());
-                JOptionPane.showMessageDialog(this, "Palestrante associado ao evento!");
+                JOptionPane.showMessageDialog(this, "Palestrante associado ao evento com sucesso!");
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Erro: " + ex.getMessage());
+                JOptionPane.showMessageDialog(this, "Erro ao associar: " + ex.getMessage());
             }
         });
 
@@ -221,7 +214,8 @@ public class PainelAssociacoes extends JPanel {
 
     private void atualizarParticipantes(JComboBox<Participante> box) {
         box.removeAllItems();
-        for (Participante p : participanteDAO.listar()) {
+        List<Participante> participantes = participanteDAO.listar();
+        for (Participante p : participantes) {
             box.addItem(p);
         }
     }
@@ -229,22 +223,24 @@ public class PainelAssociacoes extends JPanel {
     private void atualizarPalestrantes(JComboBox<Palestrante> box) {
         box.removeAllItems();
         try {
-            for (Palestrante p : palestranteDAO.listarTodos()) {
+            List<Palestrante> palestrantes = palestranteDAO.listarTodos();
+            for (Palestrante p : palestrantes) {
                 box.addItem(p);
             }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Erro ao carregar palestrantes: " + ex.getMessage());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao carregar palestrantes: " + e.getMessage());
         }
     }
 
     private void atualizarEventos(JComboBox<Evento> box) {
         box.removeAllItems();
         try {
-            for (Evento e : eventoDAO.listarTodos()) {
+            List<Evento> eventos = eventoDAO.listarTodos();
+            for (Evento e : eventos) {
                 box.addItem(e);
             }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Erro ao carregar eventos: " + ex.getMessage());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao carregar eventos: " + e.getMessage());
         }
     }
 }

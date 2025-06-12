@@ -1,15 +1,12 @@
 package projeto.dao;
 
-import projeto.model.Evento;
+import java.sql.*;
+import java.util.*;
 import projeto.model.Palestrante;
+import projeto.model.Evento;
 import projeto.utilidades.Conexao;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-
 public class PalestranteDAO {
-
     public void inserir(Palestrante palestrante) throws SQLException {
         String sql = "INSERT INTO palestrantes (nome, curriculo, area_atuacao) VALUES (?, ?, ?)";
         try (Connection conn = Conexao.getConnection();
@@ -62,8 +59,8 @@ public class PalestranteDAO {
     }
 
     public List<Palestrante> listarTodos() throws SQLException {
-        String sql = "SELECT * FROM palestrantes";
         List<Palestrante> lista = new ArrayList<>();
+        String sql = "SELECT * FROM palestrantes";
         try (Connection conn = Conexao.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -91,17 +88,10 @@ public class PalestranteDAO {
 
     public List<Evento> listarEventosDoPalestrante(int palestranteId) {
         List<Evento> eventos = new ArrayList<>();
-        String sql = "SELECT e.*, p.nome AS palestrante_nome " +
-                     "FROM eventos e " +
-                     "JOIN palestrantes_eventos pe ON e.id = pe.evento_id " +
-                     "JOIN palestrantes p ON p.id = pe.palestrante_id " +
-                     "WHERE pe.palestrante_id = ?";
-
+        String sql = "SELECT e.* FROM eventos e JOIN palestrantes_eventos pe ON e.id = pe.evento_id WHERE pe.palestrante_id = ?";
         try (Connection conn = Conexao.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-
             stmt.setInt(1, palestranteId);
-
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     Evento evento = new Evento();
@@ -110,19 +100,12 @@ public class PalestranteDAO {
                     evento.setData(rs.getDate("data").toLocalDate());
                     evento.setLocal(rs.getString("local"));
                     evento.setDescricao(rs.getString("descricao"));
-
-                    String palestranteNome = rs.getString("palestrante_nome");
-                    evento.setPalestrante(palestranteNome != null ? palestranteNome : "Sem palestrante");
-
                     eventos.add(evento);
                 }
             }
-
         } catch (SQLException e) {
             System.err.println("Erro ao listar eventos do palestrante: " + e.getMessage());
-            e.printStackTrace();
         }
-
         return eventos;
     }
 }

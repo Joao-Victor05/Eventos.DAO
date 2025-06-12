@@ -6,7 +6,6 @@ import projeto.model.Participante;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.util.List;
 
 public class PainelParticipantes extends JPanel {
@@ -49,67 +48,69 @@ public class PainelParticipantes extends JPanel {
         formPanel.add(btnRemover);
         add(formPanel, BorderLayout.SOUTH);
 
-        btnAdicionar.addActionListener(e -> {
-            try {
-                String nome = nomeField.getText().trim();
-                String email = emailField.getText().trim();
-                String telefone = telefoneField.getText().trim();
-                if (nome.isEmpty() || email.isEmpty() || telefone.isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "Preencha todos os campos.");
-                    return;
-                }
-                Participante participante = new Participante(0, nome, email, telefone);
-                participanteDAO.inserir(participante);
-                atualizarTabela();
-                nomeField.setText("");
-                emailField.setText("");
-                telefoneField.setText("");
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Erro ao adicionar participante: " + ex.getMessage());
-            }
-        });
-
-        btnEditar.addActionListener(e -> {
-            int row = table.getSelectedRow();
-            if (row == -1) {
-                JOptionPane.showMessageDialog(this, "Selecione um participante para editar.");
-                return;
-            }
-            try {
-                int id = (int) tableModel.getValueAt(row, 0);
-                String nome = JOptionPane.showInputDialog(this, "Novo nome:", tableModel.getValueAt(row, 1));
-                String email = JOptionPane.showInputDialog(this, "Novo email:", tableModel.getValueAt(row, 2));
-                String telefone = JOptionPane.showInputDialog(this, "Novo telefone:", tableModel.getValueAt(row, 3));
-                if (nome == null || email == null || telefone == null) return;
-                Participante participante = new Participante(id, nome, email, telefone);
-                // Atualização não implementada no DAO, apenas atualiza a tabela local
-                // participanteDAO.atualizar(participante);
-                atualizarTabela();
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Erro ao editar participante: " + ex.getMessage());
-            }
-        });
-
-        btnRemover.addActionListener(e -> {
-            int row = table.getSelectedRow();
-            if (row == -1) {
-                JOptionPane.showMessageDialog(this, "Selecione um participante para remover.");
-                return;
-            }
-            int id = (int) tableModel.getValueAt(row, 0);
-            int confirm = JOptionPane.showConfirmDialog(this, "Tem certeza que deseja remover o participante?", "Confirmação", JOptionPane.YES_NO_OPTION);
-            if (confirm == JOptionPane.YES_OPTION) {
-                try {
-                    // Remoção não implementada no DAO, apenas remove da tabela local
-                    // participanteDAO.excluir(id);
-                    atualizarTabela();
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "Erro ao remover participante: " + ex.getMessage());
-                }
-            }
-        });
+        btnAdicionar.addActionListener(_ -> adicionarParticipante(nomeField, emailField, telefoneField));
+        btnEditar.addActionListener(_ -> editarParticipante());
+        btnRemover.addActionListener(_ -> removerParticipante());
 
         atualizarTabela();
+    }
+
+    private void adicionarParticipante(JTextField nomeField, JTextField emailField, JTextField telefoneField) {
+        try {
+            String nome = nomeField.getText().trim();
+            String email = emailField.getText().trim();
+            String telefone = telefoneField.getText().trim();
+            if (nome.isEmpty() || email.isEmpty() || telefone.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Preencha todos os campos obrigatórios.");
+                return;
+            }
+            Participante participante = new Participante(0, nome, email, telefone);
+            participanteDAO.inserir(participante);
+            atualizarTabela();
+            nomeField.setText("");
+            emailField.setText("");
+            telefoneField.setText("");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Erro ao adicionar participante: " + ex.getMessage());
+        }
+    }
+
+    private void editarParticipante() {
+        int row = table.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione um participante para editar.");
+            return;
+        }
+        try {
+            int id = (int) tableModel.getValueAt(row, 0);
+            String nome = JOptionPane.showInputDialog(this, "Novo nome:", tableModel.getValueAt(row, 1));
+            String email = JOptionPane.showInputDialog(this, "Novo email:", tableModel.getValueAt(row, 2));
+            String telefone = JOptionPane.showInputDialog(this, "Novo telefone:", tableModel.getValueAt(row, 3));
+            if (nome == null || email == null || telefone == null) return;
+            Participante participante = new Participante(id, nome, email, telefone);
+            participanteDAO.atualizar(participante);
+            atualizarTabela();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Erro ao editar participante: " + ex.getMessage());
+        }
+    }
+
+    private void removerParticipante() {
+        int row = table.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione um participante para remover.");
+            return;
+        }
+        int id = (int) tableModel.getValueAt(row, 0);
+        int confirm = JOptionPane.showConfirmDialog(this, "Tem certeza que deseja remover o participante?", "Confirmação", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            try {
+                participanteDAO.excluir(id);
+                atualizarTabela();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Erro ao remover participante: " + ex.getMessage());
+            }
+        }
     }
 
     private void atualizarTabela() {

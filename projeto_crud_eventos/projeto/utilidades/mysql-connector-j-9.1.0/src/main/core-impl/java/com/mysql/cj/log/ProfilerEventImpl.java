@@ -18,10 +18,10 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package com.mysql.cj.log;
 
 import java.util.Date;
 
+import com.mysql.cj.log.ProfilerEvent;
 import com.mysql.cj.util.LogUtils;
 import com.mysql.cj.util.StringUtils;
 

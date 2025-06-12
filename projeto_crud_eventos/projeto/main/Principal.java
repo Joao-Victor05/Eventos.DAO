@@ -120,7 +120,7 @@ public class Principal {
                 if (!eventos.isEmpty()) {
                     System.out.println("  Eventos associados:");
                     for (Evento e : eventos) {
-                        System.out.println("    - " + e.getNome() + " (Participante: " + e.getNomeParticipante() + ")");
+                        System.out.println("    - " + e.getNome());
                     }
                 }
             }
@@ -213,7 +213,7 @@ public class Principal {
                 if (!eventos.isEmpty()) {
                     System.out.println("  Eventos associados:");
                     for (Evento e : eventos) {
-                        System.out.println("    - " + e.getNome() + " (Palestrante: " + e.getPalestrante() + ")");
+                        System.out.println("    - " + e.getNome());
                     }
                 }
             }

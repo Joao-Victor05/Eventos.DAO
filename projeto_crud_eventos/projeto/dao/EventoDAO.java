@@ -1,10 +1,15 @@
 package projeto.dao;
 
-import projeto.model.Evento;
-import projeto.utilidades.Conexao;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import projeto.model.Evento;
+import projeto.utilidades.Conexao;
 
 public class EventoDAO {
     public void inserir(Evento evento) throws SQLException {
@@ -46,23 +51,24 @@ public class EventoDAO {
         try (Connection conn = Conexao.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return new Evento(
-                    rs.getInt("id"),
-                    rs.getString("nome"),
-                    rs.getDate("data").toLocalDate(),
-                    rs.getString("local"),
-                    rs.getString("descricao")
-                );
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Evento(
+                        rs.getInt("id"),
+                        rs.getString("nome"),
+                        rs.getDate("data").toLocalDate(),
+                        rs.getString("local"),
+                        rs.getString("descricao")
+                    );
+                }
             }
         }
         return null;
     }
 
     public List<Evento> listarTodos() throws SQLException {
-        String sql = "SELECT * FROM eventos";
         List<Evento> eventos = new ArrayList<>();
+        String sql = "SELECT * FROM eventos";
         try (Connection conn = Conexao.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -78,5 +84,4 @@ public class EventoDAO {
         }
         return eventos;
     }
-    
 }

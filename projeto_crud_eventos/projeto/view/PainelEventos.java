@@ -6,7 +6,6 @@ import projeto.model.Evento;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -53,70 +52,74 @@ public class PainelEventos extends JPanel {
         formPanel.add(btnRemover);
         add(formPanel, BorderLayout.SOUTH);
 
-        btnAdicionar.addActionListener(e -> {
-            try {
-                String nome = nomeField.getText().trim();
-                String dataStr = dataField.getText().trim();
-                String local = localField.getText().trim();
-                String descricao = descricaoField.getText().trim();
-                if (nome.isEmpty() || dataStr.isEmpty() || local.isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "Preencha todos os campos obrigatórios.");
-                    return;
-                }
-                LocalDate data = LocalDate.parse(dataStr);
-                Evento evento = new Evento(nome, data, local, descricao);
-                eventoDAO.inserir(evento);
-                atualizarTabela();
-                nomeField.setText("");
-                dataField.setText("");
-                localField.setText("");
-                descricaoField.setText("");
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Erro ao adicionar evento: " + ex.getMessage());
-            }
-        });
-
-        btnEditar.addActionListener(e -> {
-            int row = table.getSelectedRow();
-            if (row == -1) {
-                JOptionPane.showMessageDialog(this, "Selecione um evento para editar.");
-                return;
-            }
-            try {
-                int id = (int) tableModel.getValueAt(row, 0);
-                String nome = JOptionPane.showInputDialog(this, "Novo nome:", tableModel.getValueAt(row, 1));
-                String dataStr = JOptionPane.showInputDialog(this, "Nova data (AAAA-MM-DD):", tableModel.getValueAt(row, 2));
-                String local = JOptionPane.showInputDialog(this, "Novo local:", tableModel.getValueAt(row, 3));
-                String descricao = JOptionPane.showInputDialog(this, "Nova descrição:", tableModel.getValueAt(row, 4));
-                if (nome == null || dataStr == null || local == null || descricao == null) return;
-                LocalDate data = LocalDate.parse(dataStr);
-                Evento evento = new Evento(id, nome, data, local, descricao);
-                eventoDAO.atualizar(evento);
-                atualizarTabela();
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Erro ao editar evento: " + ex.getMessage());
-            }
-        });
-
-        btnRemover.addActionListener(e -> {
-            int row = table.getSelectedRow();
-            if (row == -1) {
-                JOptionPane.showMessageDialog(this, "Selecione um evento para remover.");
-                return;
-            }
-            int id = (int) tableModel.getValueAt(row, 0);
-            int confirm = JOptionPane.showConfirmDialog(this, "Tem certeza que deseja remover o evento?", "Confirmação", JOptionPane.YES_NO_OPTION);
-            if (confirm == JOptionPane.YES_OPTION) {
-                try {
-                    eventoDAO.excluir(id);
-                    atualizarTabela();
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "Erro ao remover evento: " + ex.getMessage());
-                }
-            }
-        });
+        btnAdicionar.addActionListener(_ -> adicionarEvento(nomeField, dataField, localField, descricaoField));
+        btnEditar.addActionListener(_ -> editarEvento());
+        btnRemover.addActionListener(_ -> removerEvento());
 
         atualizarTabela();
+    }
+
+    private void adicionarEvento(JTextField nomeField, JTextField dataField, JTextField localField, JTextField descricaoField) {
+        try {
+            String nome = nomeField.getText().trim();
+            String dataStr = dataField.getText().trim();
+            String local = localField.getText().trim();
+            String descricao = descricaoField.getText().trim();
+            if (nome.isEmpty() || dataStr.isEmpty() || local.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Preencha todos os campos obrigatórios.");
+                return;
+            }
+            LocalDate data = LocalDate.parse(dataStr);
+            Evento evento = new Evento(nome, data, local, descricao);
+            eventoDAO.inserir(evento);
+            atualizarTabela();
+            nomeField.setText("");
+            dataField.setText("");
+            localField.setText("");
+            descricaoField.setText("");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Erro ao adicionar evento: " + ex.getMessage());
+        }
+    }
+
+    private void editarEvento() {
+        int row = table.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione um evento para editar.");
+            return;
+        }
+        try {
+            int id = (int) tableModel.getValueAt(row, 0);
+            String nome = JOptionPane.showInputDialog(this, "Novo nome:", tableModel.getValueAt(row, 1));
+            String dataStr = JOptionPane.showInputDialog(this, "Nova data (AAAA-MM-DD):", tableModel.getValueAt(row, 2));
+            String local = JOptionPane.showInputDialog(this, "Novo local:", tableModel.getValueAt(row, 3));
+            String descricao = JOptionPane.showInputDialog(this, "Nova descrição:", tableModel.getValueAt(row, 4));
+            if (nome == null || dataStr == null || local == null || descricao == null) return;
+            LocalDate data = LocalDate.parse(dataStr);
+            Evento evento = new Evento(id, nome, data, local, descricao);
+            eventoDAO.atualizar(evento);
+            atualizarTabela();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Erro ao editar evento: " + ex.getMessage());
+        }
+    }
+
+    private void removerEvento() {
+        int row = table.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione um evento para remover.");
+            return;
+        }
+        int id = (int) tableModel.getValueAt(row, 0);
+        int confirm = JOptionPane.showConfirmDialog(this, "Tem certeza que deseja remover o evento?", "Confirmação", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            try {
+                eventoDAO.excluir(id);
+                atualizarTabela();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Erro ao remover evento: " + ex.getMessage());
+            }
+        }
     }
 
     private void atualizarTabela() {
