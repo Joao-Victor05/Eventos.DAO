@@ -16,8 +16,8 @@ projeto_crud_eventos/
   projeto/
     controller/      # Lógica de controle (MVC)
     dao/             # Acesso a dados (JDBC)
-    main/            # Classe principal
-    model/           # Modelos de domínio (POJOs)
+    main/            # Cla(sse principal
+    model/           # Modelos de domínio POJOs)
     utilidades/      # Utilitários e conexão com o banco
     view/            # Telas e componentes Swing
 ```
@@ -43,14 +43,6 @@ projeto_crud_eventos/
      java -cp .;lib/mysql-connector-j-9.3.0.jar projeto.main.Principal
      ```
 
-## Critérios de Qualidade
-- **Manutenibilidade**: arquitetura modular, orientação a objetos, fácil de evoluir.
-- **Usabilidade**: interface intuitiva, com atalhos e feedback visual.
-- **Segurança**: proteção de dados sensíveis, recomenda-se uso de hash de senha e validação de entrada.
-- **Performance**: consultas otimizadas, pronto para grande volume de dados.
-- **Confiabilidade**: tratamento de erros, pronto para testes automatizados.
-- **Documentação**: código comentado e este README para facilitar uso e manutenção.
 
-## Licença
-Este projeto é acadêmico e livre para uso e modificação.
+
 
